@@ -67,18 +67,20 @@ pipeline {
                 }
             }
         }
-        stage("Docker Scout Image") {
-            steps {
-                script {
-                    withDockerRegistry(credentialsId: 'dockerhub-creds', toolName: 'docker') {
-                        sh 'docker-scout quickview manikiran7/firstrepo:latest'
-                        sh 'docker-scout cves manikiran7/firstrepo:latest'
-                        sh 'docker-scout recommendations manikiran7/firstrepo:latest'
-                    }
+    stage("Docker Scout Image") {
+    steps {
+        script {
+            catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                withDockerRegistry(credentialsId: 'dockerhub-creds', toolName: 'docker') {
+                    sh 'docker-scout quickview manikiran7/firstrepo:latest'
+                    sh 'docker-scout cves manikiran7/firstrepo:latest'
+                    sh 'docker-scout recommendations manikiran7/firstrepo:latest'
                 }
             }
         }
-        stage("Deploy to Container") {
+    }
+}
+ stage("Deploy to Container") {
             steps {
                 sh 'docker run -d --name zomato -p 3000:3000 manikiran7/firstrepo:latest'
             }
