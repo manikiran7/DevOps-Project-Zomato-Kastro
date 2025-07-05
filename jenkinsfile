@@ -4,6 +4,9 @@ pipeline {
         jdk 'Java21'
         nodejs 'node23'
     }
+    options {
+    timestamps()
+    }
     environment {
         SCANNER_HOME = tool 'SonarScanner'
     }
@@ -76,5 +79,13 @@ pipeline {
                 '''
             }
         }
+    }
+}
+post {
+    success {
+        echo 'Pipeline completed successfully!'
+    }
+    failure {
+        echo 'Pipeline failed!'
     }
 }
