@@ -5,7 +5,7 @@ pipeline {
         nodejs 'node23'
     }
     options {
-    timestamps()
+        timestamps()
     }
     environment {
         SCANNER_HOME = tool 'SonarScanner'
@@ -70,8 +70,7 @@ pipeline {
                 }
             }
         }
-
- stage("Deploy to Container") {
+        stage("Deploy to Container") {
             steps {
                 sh '''
                 docker rm -f zomato || true
@@ -80,12 +79,16 @@ pipeline {
             }
         }
     }
-}
-post {
-    success {
-        echo 'Pipeline completed successfully!'
-    }
-    failure {
-        echo 'Pipeline failed!'
+
+    post {
+        success {
+            echo '✅ Pipeline completed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
+        }
+        always {
+            echo '📦 Cleanup or notifications can go here.'
+        }
     }
 }
